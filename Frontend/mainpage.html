@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>DuGlemmerDetAldrig Assignment</title>
+    <script src= "http://ajax.googleapis.com/ajax/libs/angularjs/1.2.27/angular.min.js"></script>
+    <script src="rest.js"></script>
+    <link href="http://maxcdn.bootstrapcdn.com/bootswatch/3.2.0/flatly/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <div data-ng-app="DGDAapp" data-ng-controller="ReadProductsController" class="container">
+        <h1>Product List</h1>
+        <table class="table">
+            <tr data-ng-repeat="product in Products">
+                <td><div contenteditable="true" ng-model="product.Name"/></td>
+                <td><div contenteditable="true" ng-model="product.Description"/></td>
+                <td><div contenteditable="true" ng-model="product.Price"/></td>
+                <td><div contenteditable="true" ng-model="product.InStock"/></td>
+                <td>
+                    <button data-ng-click="updateProduct(product.ID, product.Name, product.Description, product.Price, product.InStock)">Update</button>
+                </td>
+                <td>
+                    <button data-ng-click="deleteProduct(product.ID)">Delete</button>
+                </td>
+            </tr>
+        </table>
+        
+        <h1>Create Product</h1>
+        <div>
+            <table>
+                <td><input ng-model="newProductName" placeholder="Name"/></td>
+                <td><input ng-model="newProductDescription" placeholder="Description"/></td>
+                <td><input ng-model="newProductPrice" placeholder="Price"/></td>
+                <td><input ng-model="newProductInStock" placeholder="InStock"/></td>
+            </table>
+            <button data-ng-click="createProduct(newProductName, newProductDescription, newProductPrice, newProductInStock)">Create</button>
+        </div>
+        <div ng-model="message" />
+    </div>
+</body>
