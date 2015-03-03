@@ -13,7 +13,7 @@
 </head>
 
 <body>
-    <div data-ng-app="DGDAapp" data-ng-controller="ReadProductsController" class="container">
+    <div data-ng-app="DGDAapp" data-ng-controller="ProductsController" class="container">
         <h1>Product List</h1>
         <table class="table">
             <tr data-ng-repeat="product in Products">
@@ -40,6 +40,8 @@
             </table>
             <button data-ng-click="createProduct(newProductName, newProductDescription, newProductPrice, newProductInStock)">Create</button>
         </div>
-        <div ng-model="message" />
+        <hr>
+        <span ng-bind="errorMessage" style="color: Red;"></span>
+        <span ng-bind="message"></span>
     </div>
 </body>

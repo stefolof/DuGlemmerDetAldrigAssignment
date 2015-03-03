@@ -1,5 +1,6 @@
 var app = angular.module('DGDAapp', []);
 
+// Override contenteditable to allow two-way binding
 app.directive('contenteditable', function () {
     return {
         restrict: 'A', // only activate on element attribute
@@ -17,8 +18,6 @@ app.directive('contenteditable', function () {
                 scope.$apply(readViewText);
             });
 
-            // No need to initialize, AngularJS will initialize the text based on ng-model attribute
-
             // Write data to the model
             function readViewText() {
                 var html = element.html();
@@ -33,40 +32,14 @@ app.directive('contenteditable', function () {
     };
 });
 
-function CreateProductController($scope, $http) {
-    var req = {
-        method: 'POST',
-        url: 'http://localhost:1226/REST/CreateProduct.aspx',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        transformRequest: function(obj) {
-            var str = [];
-            for(var p in obj)
-                str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-            return str.join("&");
-        },
-        data: {JSON: "{\"Name\":\"haha\"}"},
-    }
-    
-    $http(req).
-    success(function(data, status, headers, config) {
-        
-    }).
-    error(function(data, status, headers, config) {
-    // called asynchronously if an error occurs
-    // or server returns response with an error status.
-    });
-}
-
-function ReadProductsController($scope, $http) {
+// Main controller for reading, creating, updating and deleting products.
+function ProductsController($scope, $http) {
     $http.get('http://localhost:1226/REST/ReadProducts.aspx').
     success(function(data) {
         $scope.Products = data.Products;
     }).
     error(function(data, status, headers, config) {
-    // called asynchronously if an error occurs
-    // or server returns response with an error status.
+        $scope.errorMessage = "Could not read products from database.";
     });
     
     $scope.updateProduct = function(productID, productName, productDescription, productPrice, productInStock) {
@@ -76,6 +49,7 @@ function ReadProductsController($scope, $http) {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
+            // Transform request to simplify handling of post data on REST server
             transformRequest: function(obj) {
                 var str = [];
                 for(var p in obj)
@@ -91,11 +65,10 @@ function ReadProductsController($scope, $http) {
         
         $http(req).
         success(function(data, status, headers, config) {
-            $scope.message = "Product was delete successfully!";
+            $scope.message = "Product was updated successfully!";
         }).
         error(function(data, status, headers, config) {
-        // called asynchronously if an error occurs
-        // or server returns response with an error status.
+            $scope.errorMessage = "Could not update product.";
         });
     };
     
@@ -106,6 +79,7 @@ function ReadProductsController($scope, $http) {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
+            // Transform request to simplify handling of post data on REST server
             transformRequest: function(obj) {
                 var str = [];
                 for(var p in obj)
@@ -131,7 +105,7 @@ function ReadProductsController($scope, $http) {
             });
         }).
         error(function(data, status, headers, config) {
-            $scope.message = "";
+            $scope.errorMessage = "Could not create product.";
         });
     };
 
@@ -142,6 +116,7 @@ function ReadProductsController($scope, $http) {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
+            // Transform request to simplify handling of post data on REST server
             transformRequest: function(obj) {
                 var str = [];
                 for(var p in obj)
@@ -156,10 +131,10 @@ function ReadProductsController($scope, $http) {
             $scope.message = "Product was delete successfully!";
             var index = $scope.Products.indexOf(productID)
             $scope.Products.splice(index, 1);
+            $scope.message = "Product was deleted successfully!";
         }).
         error(function(data, status, headers, config) {
-        // called asynchronously if an error occurs
-        // or server returns response with an error status.
+            $scope.errorMessage = "Could not delete product.";
         });
     };
 }
